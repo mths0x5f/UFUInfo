@@ -30,8 +30,16 @@ Depende da biblioteca Beautiful Soup 4 e Python 2.7
 """
 
 import urllib2
-import json ##################### remover ao fim dos testes
 from bs4 import BeautifulSoup
+
+def tratar_chave(key):
+    """Prepara uma chave, removendo caracteres especiais"""
+    trocas = {'á':'a','à':'a','ã':'a','ç':'c','é':'e','ó':'o','õ':'o',' ':'-'}
+    key = key.string.encode('utf-8').strip()
+    for x, y in zip(trocas.keys(), trocas.values()):
+        key = key.replace(x, y)
+    return key.lower()
+
 
 class ParserRU:
     
@@ -62,8 +70,7 @@ class ParserRU:
 
         for ref, tab in zip(nomes_ref, tabelas_card):
 
-            refeicao = ref.string.encode('utf-8')
-            refeicao = refeicao.replace('ç', 'c').lower().replace(' ', '-')
+            refeicao = tratar_chave(ref)
 
             # Percorre todos os dias disponíveis
 
@@ -78,15 +85,12 @@ class ParserRU:
                 obj_temp = {'data': '', 'refeicoes': {}}
 
                 # Percorre cada dado
-                
+
                 celulas = lin.find_all('td')
-         
+
                 for meta, dado in zip(nome_colunas, celulas):
-                    
-                    meta = meta.string.encode('utf-8').strip()
-                    meta = meta.replace(' ', '-').lower()
-                    meta = meta.replace('ç', 'c').replace('õ', 'o')
-                    meta = meta.replace('ã', 'a')
+
+                    meta = tratar_chave(meta)
 
                     if dado.string is None:
                         dado = dado.span.string.encode('utf-8').strip()
@@ -99,7 +103,7 @@ class ParserRU:
                         if not resultado:
                             obj_temp['data'] = dado
 
-                        else:            
+                        else:
                             for r in resultado:
                                 if r['data'] == dado:
                                     dia_repetido = True
@@ -109,13 +113,33 @@ class ParserRU:
                             else:
                                 obj_temp['data'] = dado
 
-                    else:                        
+                    else:
                         obj_refeicoes[refeicao].update({meta: dado})
                         obj_temp['refeicoes'].update(obj_refeicoes)
 
                 if not dia_repetido:
                     resultado.append(obj_temp)
-        
+
+        # Junta as refeições vegetarianas no mesmo cardápio que as outras
+
+        for r in resultado:
+            for s in r['refeicoes'].keys():
+                if '-vegetariano' in s:
+                    veg = {}
+                    for t in r['refeicoes'][s].keys():
+                        if not '-vegetariano' in t:
+                            veg.update({t + '-vegetariano': r['refeicoes'][s][t]})
+
+                        else:
+                            veg.update({t: r['refeicoes'][s][t]})
+
+                    sem_sufixo = s.replace('-vegetariano', '')
+                    r['refeicoes'][sem_sufixo].update(veg)
+
+            for u in r['refeicoes'].keys():
+                if '-vegetariano' in u:
+                    del r['refeicoes'][u]
+
         return dict({'campus': self.campus, 'dia-cardapio': resultado})
 
     def parse_comunicados(self):
@@ -124,80 +148,3 @@ class ParserRU:
     def parse_informacoes(self):
         pass
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-try:
-    jsonstr = json.dumps(ParserRU("umuarama").parse_cardapios(), ensure_ascii=False)
-except urllib2.HTTPError, e:
-    print "opa"
-
-text_file = open('output.json', 'w')
-text_file.write(jsonstr)
-text_file.close()
