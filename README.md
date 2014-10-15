@@ -1,14 +1,25 @@
 UFUInfo
 ==========
 
-UFUInfo é uma biblioteca Python capaz de manipular informações e aplicações da UFU.
+UFUInfo é uma biblioteca Python 2.7 capaz de manipular informações e aplicações da UFU (Universidade Federal de Uberlândia).
 
-Sinta-se à vontade para contribuir. Eu sei que meus códigos são imaturos, cheios de falha e não seguem muitas convenções, mas tentarei ajustar isso com o tempo.
+Sinta-se à vontade para contribuir.
 
 Licença
 -------
 
-UFUInfo é licenciada sob LGPL v3.
+UFUInfo é licenciada sob a LGPL v3.
 
-De qualquer forma, duvido que queira usar isso no estágio atual.
 
+Status de desenvolvimento
+-------------------------
+
+- Restaurante Universitário:
+  - [] Cardápio
+  - [] Comunicados
+  - [] Informações
+
+Dependências
+------------
+
+UFUInfo depende da biblioteca BeautifulSoup 4.
