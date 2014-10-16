@@ -82,6 +82,6 @@ class AuthBiblioteca:
 
 
 class UsuarioSenhaIncorretos(Exception):
-    """Exceção lançada quando usuário e/ou senha informados estão incorretos"""
-    def __str__(self):
-        return repr('Usuário e/ou senha estão incorretos, tente novamente.')
+  """Exceção lançada quando usuário e/ou senha informados estão incorretos"""
+  def __str__(self):
+    return repr('Usuário e/ou senha estão incorretos, tente novamente.')
