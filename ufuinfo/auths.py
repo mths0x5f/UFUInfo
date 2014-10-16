@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#                         Módulo de autenticações
+#                            Módulo de autenticações
 #
 #  This file is part of UFUInfo
 #
