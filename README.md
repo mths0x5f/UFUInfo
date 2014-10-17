@@ -34,4 +34,4 @@ Os itens marcados já estão em um estágio considerado útil
 Dependências
 ------------
 
-UFUInfo depende da biblioteca Beautiful Soup 4 e, obviamente, de uma conexão com a Internet.
+UFUInfo depende da biblioteca Beautiful Soup 4, da unidecode e, obviamente, de uma conexão com a Internet.

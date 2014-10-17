@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ufuinfo.parsers import *
 from ufuinfo.campi import *
 import json
@@ -5,7 +6,7 @@ import json
 
 ## Instanciar um objeto de parsers de um determinado campus
 
-ru = ParsersRU('santa-monica') # 'santa-monica' é o padrão, 
+ru = ParsersRU(raw_input('campus: ')) # 'santa-monica' é o padrão, 
 
 ##	Gerar um arquivo .json
 
