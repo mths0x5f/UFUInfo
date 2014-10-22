@@ -26,4 +26,16 @@ UFUInfo é uma biblioteca Python (2.7) capaz de recuperar informações disponí
 veis nos sites da UFU, a Universidade Federal de Uberlândia. Seus parsers
 retornam dictionaries devidamente aninhados, seguindo os padrões definidos pela
 documentação.
+
+Ela é constituída por esses arquivos:
+
+    - campi.py - Módulo com funções de informação e validação de campus.
+    - parsers.py - Módulo dos parsers de informações.
+    - sanitizer.py - Módulo responsável pela limpeza e padronização dos dicts.
+    - auths.py - Módulo de métodos de autenticação aos sistemas da UFU.
+    - actions.py - Módulo de ações e requisições aos sistemas da UFU.
+
+Todas as classes, métodos e funções estão documentadas em seu próprio código
+para a melhor compreensão sobre o uso desta biblioteca. Documentação adicional
+pode ser obtida na página do projeto no GitHub: github.com/mths0x5f/UFUInfo
 """
