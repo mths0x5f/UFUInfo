@@ -23,7 +23,7 @@
 """Módulo de parsing
 
 "Extratores" de informações disponíveis em sites da instituição que retornam
-dictionaries devidamente aninhados. 
+dictionaries devidamente aninhados.
 
 Depende da biblioteca Beautiful Soup 4 e Python 2.7
 
@@ -31,20 +31,11 @@ Depende da biblioteca Beautiful Soup 4 e Python 2.7
 
 import urllib2
 from bs4 import BeautifulSoup
-from campi import * 
-import exceptions
-
-def tratar_chave(key):
-    """Prepara uma chave, removendo caracteres especiais"""
-    trocas = {'á':'a','à':'a','ã':'a','ç':'c','é':'e','ó':'o','õ':'o',' ':'-'}
-    key = key.string.encode('utf-8').strip()
-    for x, y in zip(trocas.keys(), trocas.values()):
-        key = key.replace(x, y)
-    return key.lower()
-
+from campi import *
+from sanitizer import *
 
 class ParsersRU:
-    
+
     """Extrai informações contidas no site do Restaurante Universitário."""
 
     def __init__(self, campus = 'santa-monica'):
@@ -61,7 +52,7 @@ class ParsersRU:
 
         """Interpreta as tabelas de cardápio no site do restaurante"""
 
-        pag = urllib2.urlopen(self.url + self.campus).read();
+        pag = urllib2.urlopen(self.url + self.campus).read()
         soup = BeautifulSoup(pag)
         resultado = []
 
@@ -72,7 +63,7 @@ class ParsersRU:
 
         for ref, tab in zip(nomes_ref, tabelas_card):
 
-            refeicao = tratar_chave(ref)
+            refeicao = trata_especiais(ref.string)
 
             # Percorre todos os dias disponíveis
 
@@ -92,7 +83,7 @@ class ParsersRU:
 
                 for meta, dado in zip(nome_colunas, celulas):
 
-                    meta = tratar_chave(meta)
+                    meta = trata_especiais(meta.string)
 
                     if dado.string is None:
                         dado = dado.span.string.encode('utf-8').strip()
@@ -151,88 +142,5 @@ class ParsersRU:
 
         """Interpreta as informações gerais no site do restaurante"""
 
-        pag = urllib2.urlopen(self.url).read();
-        soup = BeautifulSoup(pag)
-        resultado = []
-
-        # Percorre as refeições e suas respectivas tabelas de cardápio
-
-        nomes_ref = soup.find('div', id='quickset-apresentacao').find_all('h3')
-        tabelas_card = soup.find('div', id='quickset-apresentacao').find_all('article')
-        del nomes_ref[7], nomes_ref[6], nomes_ref[1], nomes_ref[0]
-        del tabelas_card[7], tabelas_card[6], tabelas_card[1], tabelas_card[0]
-
-        for ref, tab in zip(nomes_ref, tabelas_card):
-            print ref.string, tab.find('div', class_='field-item').p
-            refeicao = tratar_chave(ref)
-
-            # Percorre todos os dias disponíveis
-
-            nome_colunas = tab.find_all('th')
-            linhas = tab.find_all('tr', class_=True)
-
-            for lin in linhas: # Cada linha é um dia diferente
-
-                dia_repetido = False # Para controlar a repetição
-
-                obj_refeicoes = {refeicao: {}}
-                obj_temp = {'data': '', 'refeicoes': {}}
-
-                # Percorre cada dado
-
-                celulas = lin.find_all('td')
-
-                for meta, dado in zip(nome_colunas, celulas):
-
-                    meta = tratar_chave(meta)
-
-                    if dado.string is None:
-                        dado = dado.span.string.encode('utf-8').strip()
-                        dado = dado.translate(None, 'aábcçdefghijklmnopqrstuvzwxyz- ,')
-
-                    else:
-                        dado = dado.string.encode('utf-8').strip()
-
-                    if meta == 'data':
-                        if not resultado:
-                            obj_temp['data'] = dado
-
-                        else:
-                            for r in resultado:
-                                if r['data'] == dado:
-                                    dia_repetido = True
-                                    r['refeicoes'].update(obj_refeicoes)
-                                    break
-
-                            else:
-                                obj_temp['data'] = dado
-
-                    else:
-                        obj_refeicoes[refeicao].update({meta: dado})
-                        obj_temp['refeicoes'].update(obj_refeicoes)
-
-                if not dia_repetido:
-                    resultado.append(obj_temp)
-
-        # Junta as refeições vegetarianas no mesmo cardápio que as outras
-
-        for r in resultado:
-            for s in r['refeicoes'].keys():
-                if '-vegetariano' in s:
-                    veg = {}
-                    for t in r['refeicoes'][s].keys():
-                        if not '-vegetariano' in t:
-                            veg.update({t + '-vegetariano': r['refeicoes'][s][t]})
-
-                        else:
-                            veg.update({t: r['refeicoes'][s][t]})
-
-                    sem_sufixo = s.replace('-vegetariano', '')
-                    r['refeicoes'][sem_sufixo].update(veg)
-
-            for u in r['refeicoes'].keys():
-                if '-vegetariano' in u:
-                    del r['refeicoes'][u]
-
-        return dict({'campus': self.campus, 'dia-cardapio': resultado})
-
+        pass
+        
