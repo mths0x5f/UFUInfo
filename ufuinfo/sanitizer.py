@@ -1,11 +1,36 @@
 # -*- coding: utf-8 -*-
+#
+#                       Módulo de normalização e limpeza
+#
+#  This file is part of UFUInfo
+#
+#  Copyright (C) 2014  Matheus Silva Santos
+#
+#  UFUInfo is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  UFUInfo is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with UFUInfo.  If not, see <http://www.gnu.org/licenses/>.
+#
 
+u"""Módulo de normalização e limpeza.
+
+Este módulo contém funções de limpeza de strings e normalização de estruturas
+de dados utilizadas no projeto.
+"""
 
 from unidecode import unidecode
 
 
 def trata_espaco_extra(string):
-    """Remove espaço duplicado, tabs e outros *white-space* em strings.
+    u"""Remove espaço duplicado, tabs e outros *white-space* em strings.
 
     Arguments:
 
@@ -22,7 +47,7 @@ def trata_espaco_extra(string):
 
 
 def trata_espaco(string):
-    """Substitui espaço pelo caractere '-' (hífen, menos) em strings.
+    u"""Substitui espaço pelo caractere '-' (hífen, menos) em strings.
 
     Arguments:
 
@@ -39,7 +64,7 @@ def trata_espaco(string):
 
 
 def trata_especiais(string):
-    """Substitui caracteres especiais pelos seus equivalentes em strings.
+    u"""Substitui caracteres especiais pelos seus equivalentes em strings.
 
     Arguments:
 
@@ -55,13 +80,25 @@ def trata_especiais(string):
         return unidecode(string)  # pure unicode
 
 
-def normaliza_chave(chave):
+def normaliza_chave(string):
+    u"""Normaliza/padroniza uma dada string, substituindo espaços e especiais.
 
-    chave = trata_espaco_extra(chave)
-    chave = trata_espaco(chave)
-    chave = trata_especiais(chave)
+    Arguments:
 
-    return chave.lower()
+        string (str): A string a ser modificada.
+
+    Returns:
+
+        A string modificada.
+    """
+    string = trata_espaco_extra(string)
+    string = trata_espaco(string)
+    string = trata_especiais(string)
+
+    return string.lower()
+
+
+normaliza_id = normaliza_chave  # Alias para a função normaliza_chave
 
 
 def normaliza_dict(dictionary):
@@ -69,4 +106,4 @@ def normaliza_dict(dictionary):
 
 
 if __name__ == '__main__':
-    print normaliza_chave('Santa          Mônica')
+    print normaliza_id.__doc__
