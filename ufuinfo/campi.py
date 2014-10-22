@@ -57,7 +57,7 @@ def verifica_campus(campus):
 
         campus: A própria chave, tratada.
     """
-    campus = sanitizer.remove_especiais(campus)
+    campus = sanitizer.trata_especiais(campus)
     if campus not in campi.keys():
         raise CampusNaoExiste
 

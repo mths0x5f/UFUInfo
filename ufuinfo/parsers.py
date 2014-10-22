@@ -63,7 +63,7 @@ class ParsersRU:
 
         for ref, tab in zip(nomes_ref, tabelas_card):
 
-            refeicao = remove_especiais(ref.string)
+            refeicao = trata_especiais(ref.string)
 
             # Percorre todos os dias disponíveis
 
@@ -83,7 +83,7 @@ class ParsersRU:
 
                 for meta, dado in zip(nome_colunas, celulas):
 
-                    meta = remove_especiais(meta.string)
+                    meta = trata_especiais(meta.string)
 
                     if dado.string is None:
                         dado = dado.span.string.encode('utf-8').strip()
