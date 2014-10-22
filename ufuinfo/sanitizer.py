@@ -30,7 +30,7 @@ from unidecode import unidecode
 
 
 def trata_espaco_extra(string):
-    u"""Remove espaço duplicado, tabs e outros *white-space* em strings.
+    u"""Remove espaço duplicado, tabs e outros *white-space*.
 
     Arguments:
 
@@ -47,7 +47,7 @@ def trata_espaco_extra(string):
 
 
 def trata_espaco(string):
-    u"""Substitui espaço pelo caractere '-' (hífen, menos) em strings.
+    u"""Substitui espaço pelo caractere '-' (hífen, menos).
 
     Arguments:
 
@@ -64,7 +64,7 @@ def trata_espaco(string):
 
 
 def trata_especiais(string):
-    u"""Substitui caracteres especiais pelos seus equivalentes em strings.
+    u"""Substitui caracteres especiais pelos seus equivalentes.
 
     Arguments:
 
@@ -102,8 +102,18 @@ normaliza_id = normaliza_chave  # Alias para a função normaliza_chave
 
 
 def normaliza_dict(dictionary):
-    pass
+    u"""Normaliza/padroniza um dado dictionary.
+
+    Arguments:
+
+        dictionary (dict): O dicionário a ser modificado.
+
+    Returns:
+
+        O dictionary modificado.
+    """
+    print dictionary.keys()
 
 
 if __name__ == '__main__':
-    print normaliza_id.__doc__
+    print normaliza_dict({'teste':'', 'hoje': {'ontem':{'manhã':1}}})
