@@ -112,8 +112,24 @@ def normaliza_dict(dictionary):
 
         O dictionary modificado.
     """
-    print dictionary.keys()
+    if type(dictionary) is dict:
+        for chave, valor in zip(dictionary.keys(), dictionary.values()):
+            print chave
+            if type(valor) is list:
+                normaliza_dict(valor)
+    elif type(dictionary) is list:
+        normaliza_dict(dictionary)
+
+'''    for chave, valor in zip(dictionary.keys(), dictionary.values()):
+        print chave
+        if type(valor) is list:
+            print 'lista'
+            for lista in dictionary[chave]:
+                print lista
+                if type(lista) is dict:
+                    print 'dict'
+                    normaliza_dict(lista)'''
 
 
 if __name__ == '__main__':
-    print normaliza_dict({'teste':'', 'hoje': {'ontem':{'manhã':1}}})
+    print 'oi'
