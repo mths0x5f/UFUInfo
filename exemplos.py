@@ -9,8 +9,8 @@ import json
 
 ru = ParsersRU('Santa Mônica') # 'santa-monica' é o padrão, 
 
-sanitizer.normaliza_dict(ru.parse_cardapios())
+d = sanitizer.normaliza_dict(ru.parse_cardapios())
 
 ##	Gerar um arquivo .json
 
-open('saida.json', 'w').write(json.dumps(ru.parse_cardapios()))
+open('saida.json', 'w').write(json.dumps(d))
