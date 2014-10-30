@@ -113,14 +113,20 @@ def normaliza_dict(dictionary):
         O dictionary modificado.
     """
     if type(dictionary) is dict:
+
         for chave, valor in zip(dictionary.keys(), dictionary.values()):
+
             if type(valor) is str:
                 dictionary[chave] = trata_espaco_extra(valor)
-            if '/' in chave and valor:
+
+            if '/' in chave and '/' in valor:
                 for x, y in zip(chave.split('/'), valor.split('/')):
                     dictionary[x] = y
+
                 del dictionary[chave]
+
             normaliza_dict(valor)
+
     elif type(dictionary) is list:
         for item in dictionary:
             normaliza_dict(item)
