@@ -101,19 +101,42 @@ def normaliza_chave(string):
 normaliza_id = normaliza_chave  # Alias para a função normaliza_chave
 
 
-def normaliza_dict(dictionary):
-    u"""Normaliza/padroniza um dado dictionary.
+def normaliza_estrutura(estrutura):
+    u"""Normaliza/padroniza uma dada estrutura.
 
     Arguments:
 
-        dictionary (dict): O dicionário a ser modificado.
+        estrutura (dict)/(list): A estrutura a ser modificada.
 
     Returns:
 
-        O dictionary modificado.
+        A estrutura modificada.
     """
-    print dictionary.keys()
+    if type(estrutura) is dict:
 
+        for chave, valor in zip(estrutura.keys(), estrutura.values()):
 
-if __name__ == '__main__':
-    print normaliza_dict({'teste':'', 'hoje': {'ontem':{'manhã':1}}})
+            normaliza_estrutura(valor)  # Recursividade, fuck yeah!
+
+            nova_chave = normaliza_chave(chave)
+            del estrutura[chave]
+            estrutura[nova_chave] = valor
+
+            if type(valor) is str:
+
+                estrutura[nova_chave] = trata_espaco_extra(valor)
+
+                # Separa em novas chaves, uma com múltiplos valores
+                # divididos por uma barra
+                if '/' in nova_chave and '/' in valor:
+
+                    for c, v in zip(nova_chave.split('/'), valor.split('/')):
+                        estrutura[c] = v
+
+                    del estrutura[nova_chave]
+
+    elif type(estrutura) is list:
+        for item in estrutura:
+            normaliza_estrutura(item)
+
+    return estrutura
