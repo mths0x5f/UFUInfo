@@ -1,7 +1,7 @@
 UFUInfo
 =======
 
-UFUInfo é uma biblioteca Python (2.7) capaz de recuperar informações disponíveis nos sites da UFU, a Universidade Federal de Uberlândia. Seus *parsers* retornam *dictionaries* (ou *lists* deles) devidamente aninhados, seguindo os padrões definidos pela documentação.
+UFUInfo é uma biblioteca Python (2.7) capaz de recuperar informações disponíveis nos sites da UFU, a Universidade Federal de Uberlândia. Seus *parsers* retornam *dictionaries* (ou *lists* desses) devidamente aninhados, seguindo os padrões definidos pela documentação.
 
 Em todo caso, há um script de exemplos na raiz do repositório, caso ler documentação não seja sua praia.
 

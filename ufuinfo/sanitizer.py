@@ -101,34 +101,42 @@ def normaliza_chave(string):
 normaliza_id = normaliza_chave  # Alias para a função normaliza_chave
 
 
-def normaliza_dict(dictionary):
-    u"""Normaliza/padroniza um dado dictionary.
+def normaliza_estrutura(estrutura):
+    u"""Normaliza/padroniza uma dada estrutura.
 
     Arguments:
 
-        dictionary (dict): O dicionário a ser modificado.
+        estrutura (dict)/(list): A estrutura a ser modificada.
 
     Returns:
 
-        O dictionary modificado.
+        A estrutura modificada.
     """
-    if type(dictionary) is dict:
+    if type(estrutura) is dict:
 
-        for chave, valor in zip(dictionary.keys(), dictionary.values()):
+        for chave, valor in zip(estrutura.keys(), estrutura.values()):
+
+            normaliza_estrutura(valor)  # Recursividade, fuck yeah!
+
+            nova_chave = normaliza_chave(chave)
+            del estrutura[chave]
+            estrutura[nova_chave] = valor
 
             if type(valor) is str:
-                dictionary[chave] = trata_espaco_extra(valor)
 
-            if '/' in chave and '/' in valor:
-                for x, y in zip(chave.split('/'), valor.split('/')):
-                    dictionary[x] = y
+                estrutura[nova_chave] = trata_espaco_extra(valor)
 
-                del dictionary[chave]
+                # Separa em novas chaves, uma com múltiplos valores
+                # divididos por uma barra
+                if '/' in nova_chave and '/' in valor:
 
-            normaliza_dict(valor)
+                    for c, v in zip(nova_chave.split('/'), valor.split('/')):
+                        estrutura[c] = v
 
-    elif type(dictionary) is list:
-        for item in dictionary:
-            normaliza_dict(item)
+                    del estrutura[nova_chave]
 
-    return dictionary
+    elif type(estrutura) is list:
+        for item in estrutura:
+            normaliza_estrutura(item)
+
+    return estrutura
