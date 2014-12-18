@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#                            Módulo de parsing
+#                               Módulo de parsing
 #
 #  This file is part of UFUInfo
 #
@@ -20,13 +20,10 @@
 #  along with UFUInfo.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-"""Módulo de parsing
+u"""Módulo de parsing.
 
-"Extratores" de informações disponíveis em sites da instituição que retornam
-dictionaries devidamente aninhados.
-
-Depende da biblioteca Beautiful Soup 4 e Python 2.7
-
+Este módulo contém métodos que extraem informações disponíveis em sites da
+instituição e as retorna em estruturas devidamente aninhados.
 """
 
 import urllib2
@@ -34,88 +31,93 @@ from bs4 import BeautifulSoup
 from campi import *
 from sanitizer import *
 
-class ParsersRU:
 
-    """Extrai informações contidas no site do Restaurante Universitário."""
+class ParsersRU(object):
+
+    u"""Extrai informações contidas no site do Restaurante Universitário."""
 
     def __init__(self, campus = 'santa-monica'):
-        """Inicializa o objeto
+        u"""Inicializa o objeto com o nome do campus, e a URL de extração.
 
-        Argumentos:
-        campus -- Nome do campus em minúsculas e hífen invés de espaço (default santa-monica)
+        Arguments:
 
+            campus (str): Nome do campus normalizado. (default santa-monica)
         """
         self.campus = verifica_campus(campus)
         self.url = 'http://www.ru.ufu.br/'
 
     def parse_cardapios(self):
 
-        """Interpreta as tabelas de cardápio no site do restaurante"""
+        u"""Interpreta as tabelas de cardápio no site do restaurante"""
 
-        pag = urllib2.urlopen(self.url + self.campus).read()
+        pag = urllib2.urlopen(self.url+self.campus).read()
         soup = BeautifulSoup(pag)
-        resultado = []
+        list_cardapios = []
 
         # Percorre as refeições e suas respectivas tabelas de cardápio
 
-        nomes_ref = soup.find('section', id='post-content').find_all('h2')
-        tabelas_card = soup.find('section', id='post-content').find_all('table')
+        section = soup.find('section', id='post-content')
+        nomes_refeicoes = section.find_all('h2')
+        tabelas_cardapios = section.find_all('table')
 
-        for ref, tab in zip(nomes_ref, tabelas_card):
+        for ref, tab in zip(nomes_refeicoes, tabelas_cardapios):
 
-            refeicao = normaliza_chave(ref.string)
+            refeicao = normaliza_chave(ref.string).replace('-'+self.campus, '')
 
             # Percorre todos os dias disponíveis
 
             nome_colunas = tab.find_all('th')
-            linhas = tab.find_all('tr', class_=True)
+            dias = tab.find_all('tr', class_=True)
 
-            for lin in linhas: # Cada linha é um dia diferente
+            for dia in dias:
 
-                dia_repetido = False # Para controlar a repetição
+                dia_repetido = False  # Para controlar a repetição
 
-                obj_refeicoes = {refeicao: {}}
-                obj_temp = {'data': '', 'refeicoes': {}}
+                dict_temp_refeicao = {refeicao: {}}
+                dict_temp = {'data': '', 'refeicoes': {}}
 
                 # Percorre cada dado
 
-                celulas = lin.find_all('td')
+                celulas = dia.find_all('td')
 
                 for meta, dado in zip(nome_colunas, celulas):
 
                     meta = normaliza_chave(meta.string)
 
-                    if dado.string is None:
+                    if dado.string is None:  # Se for campo dia
+
                         dado = dado.span.string.encode('utf-8').strip()
-                        dado = dado.translate(None, 'aábcçdefghijklmnopqrstuvzwxyz- ,')
+                        transl = 'aábcçdefghijklmnopqrstuvzwxyz- ,'
+                        dado = dado.translate(None, transl)
 
                     else:
-                        dado = dado.string.encode('utf-8').strip()
+                        dado = dado.string.strip()
 
                     if meta == 'data':
-                        if not resultado:
-                            obj_temp['data'] = dado
+
+                        if not list_cardapios:
+                            dict_temp['data'] = dado
 
                         else:
-                            for r in resultado:
+                            for r in list_cardapios:
                                 if r['data'] == dado:
                                     dia_repetido = True
-                                    r['refeicoes'].update(obj_refeicoes)
+                                    r['refeicoes'].update(dict_temp_refeicao)
                                     break
 
                             else:
-                                obj_temp['data'] = dado
+                                dict_temp['data'] = dado
 
                     else:
-                        obj_refeicoes[refeicao].update({meta: dado})
-                        obj_temp['refeicoes'].update(obj_refeicoes)
+                        dict_temp_refeicao[refeicao].update({meta: dado})
+                        dict_temp['refeicoes'].update(dict_temp_refeicao)
 
                 if not dia_repetido:
-                    resultado.append(obj_temp)
+                    list_cardapios.append(dict_temp)
 
         # Junta as refeições vegetarianas no mesmo cardápio que as outras
 
-        for r in resultado:
+        for r in list_cardapios:
             for s in r['refeicoes'].keys():
                 if '-vegetariano' in s:
                     veg = {}
@@ -133,7 +135,7 @@ class ParsersRU:
                 if '-vegetariano' in u:
                     del r['refeicoes'][u]
 
-        return dict({'campus': self.campus, 'dia-cardapio': resultado})
+        return dict({'campus': self.campus, 'cardapios': list_cardapios})
 
     def parse_comunicados(self):
         pass

@@ -7,10 +7,13 @@ import json
 
 ## Instanciar um objeto de parsers de um determinado campus
 
-ru = ParsersRU('Santa Mônica') # 'santa-monica' é o padrão, 
+ru = ParsersRU('umuarama') # 'santa-monica' é o padrão, 
 
 d = sanitizer.normaliza_estrutura(ru.parse_cardapios())
 
 ##	Gerar um arquivo .json
 
-open('saida.json', 'w').write(json.dumps(d))
+jj = json.dumps(d)
+
+
+open('saida.json', 'w').write(jj)
