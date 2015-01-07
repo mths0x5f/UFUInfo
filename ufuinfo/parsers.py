@@ -24,6 +24,8 @@ u"""Módulo de parsing.
 
 Este módulo contém métodos que extraem informações disponíveis em sites da
 instituição e as retorna em estruturas devidamente aninhados.
+
+xkcd relevante: http://xkcd.com/1421/
 """
 
 import urllib2
