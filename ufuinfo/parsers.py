@@ -46,7 +46,7 @@ class ParsersRU(object):
             campus (str): Nome do campus normalizado. (default santa-monica)
         """
         self.campus = verifica_campus(campus)
-        self.url = 'http://www.ru.ufu.br/'
+        self.url = 'http://localhost/'
 
     def parse_cardapios(self):
 
