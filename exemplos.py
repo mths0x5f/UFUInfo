@@ -13,7 +13,7 @@ d = sanitizer.normaliza_estrutura(ru.parse_cardapios())
 
 ##	Gerar um arquivo .json
 
-jj = json.dumps(d)
+jj = json.dumps(d, separators=(',',':'))
 
 
 open('saida.json', 'w').write(jj)
