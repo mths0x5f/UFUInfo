@@ -122,7 +122,7 @@ def normaliza_estrutura(estrutura):
             del estrutura[chave]
             estrutura[nova_chave] = valor
 
-            if type(valor) is str:
+            if isinstance(valor, basestring):
 
                 estrutura[nova_chave] = trata_espaco_extra(valor)
 

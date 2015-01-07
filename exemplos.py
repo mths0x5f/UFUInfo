@@ -8,8 +8,9 @@ import json
 ## Instanciar um objeto de parsers de um determinado campus
 
 ru = ParsersRU('santa-monica') # 'santa-monica' é o padrão, 
+fff = ru.parse_cardapios()
+d = sanitizer.normaliza_estrutura(fff)
 
-d = sanitizer.normaliza_estrutura(ru.parse_cardapios())
 
 ##	Gerar um arquivo .json
 
