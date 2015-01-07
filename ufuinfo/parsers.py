@@ -52,8 +52,8 @@ class ParsersRU(object):
 
         u"""Interpreta as tabelas de cardápio no site do restaurante"""
 
-        pag = urllib2.urlopen(self.url+self.campus).read()
-        soup = BeautifulSoup(pag)
+        pagina = urllib2.urlopen(self.url+self.campus).read()
+        soup = BeautifulSoup(pagina)
         list_cardapios = []
 
         # Percorre as refeições e suas respectivas tabelas de cardápio
