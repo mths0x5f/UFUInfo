@@ -24,13 +24,19 @@
 import sanitizer
 
 
+# Não há essa listagem disponível em lugar algum do site da UFU, de forma sana
+# e centralizada. O jeito é forçar ela aqui. Talvez seja mais interessante tê-
+# -la salva em um banco de dados. Feel free to contribute.
+
 campi = {
-    'santa-monica': [],
-    'umuarama': [],
-    'monte-carmelo': [],
-    'ituiutaba': [],
-    'patos-de-minas': [],
-    'gloria': []
+    'santa-monica': ['MON'],
+    'umuarama': ['UMU', 'HCU'],
+    'monte-carmelo': ['MTC'],
+    'ituiutaba': ['PON'],
+    'patos-de-minas': ['PAT'],
+    'educacao-fisica': ['FIS'],
+    'eseba': ['ESB'],
+    'gloria': ['']
 }
 
 
