@@ -29,6 +29,7 @@ xkcd relevante: http://xkcd.com/1421/
 """
 
 import urllib2
+from time import *
 from bs4 import BeautifulSoup
 from campi import *
 from sanitizer import *
@@ -76,7 +77,7 @@ class ParsersRU(object):
                 dia_repetido = False  # Para controlar a repetição
 
                 dict_temp_refeicao = {refeicao: {}}
-                dict_temp = {'data': '', 'refeicoes': {}}
+                dict_temp = {'data': '', 'refs_dict': {}}
 
                 # Percorre cada dado
 
@@ -104,7 +105,7 @@ class ParsersRU(object):
                             for r in list_cardapios:
                                 if r['data'] == dado:
                                     dia_repetido = True
-                                    r['refeicoes'].update(dict_temp_refeicao)
+                                    r['refs_dict'].update(dict_temp_refeicao)
                                     break
 
                             else:
@@ -112,7 +113,7 @@ class ParsersRU(object):
 
                     else:
                         dict_temp_refeicao[refeicao].update({meta: dado})
-                        dict_temp['refeicoes'].update(dict_temp_refeicao)
+                        dict_temp['refs_dict'].update(dict_temp_refeicao)
 
                 if not dia_repetido:
                     list_cardapios.append(dict_temp)
@@ -120,24 +121,37 @@ class ParsersRU(object):
         # Junta as refeições vegetarianas no mesmo cardápio que as outras
 
         for r in list_cardapios:
-            for s in r['refeicoes'].keys():
+            for s in r['refs_dict'].keys():
                 if '-vegetariano' in s:
                     veg = {}
-                    for t in r['refeicoes'][s].keys():
+                    for t in r['refs_dict'][s].keys():
                         if not '-vegetariano' in t:
-                            veg.update({t + '-vegetariano': r['refeicoes'][s][t]})
+                            veg.update({t + '-vegetariano': r['refs_dict'][s][t]})
 
                         else:
-                            veg.update({t: r['refeicoes'][s][t]})
+                            veg.update({t: r['refs_dict'][s][t]})
 
                     sem_sufixo = s.replace('-vegetariano', '')
-                    r['refeicoes'][sem_sufixo].update(veg)
+                    r['refs_dict'][sem_sufixo].update(veg)
 
-            for u in r['refeicoes'].keys():
+            for u in r['refs_dict'].keys():
                 if '-vegetariano' in u:
-                    del r['refeicoes'][u]
+                    del r['refs_dict'][u]
 
-        return dict({'campus': self.campus, 'cardapios': list_cardapios})
+        # Um ano depois (15/02/2015): Esse patch converte a estrutura de dicts
+        # das refeicoes, para o uso de lists. Faço isso porque é muita perda
+        # de tempo eu reescrever todo o método para usar lists. Deal with it.
+        # Também, aproveito para converter a data para ISO 8601.
+
+        for r in list_cardapios:
+            r.update({'refeicoes': []})
+            for s in r['refs_dict'].values():
+                r['refeicoes'].append(s)
+            del r['refs_dict']
+            r['data'] = strftime("%Y-%m-%d", strptime(r['data'], "%d/%m/%y"))
+
+
+        return dict({'cardapios': list_cardapios})
 
     def parse_comunicados(self):
         pass
@@ -146,5 +160,31 @@ class ParsersRU(object):
 
         """Interpreta as informações gerais no site do restaurante"""
 
-        pass
+        # Na verdade, por agora, este método apenas retorna um dict estático,
+        # já que seus valores dificilmente mudarão em um futuro próximo. Fora
+        # implementado assim para evitar a gastura. Feel free to contribute.
+
+        info = dict({'valor_reais': 3.00,
+                     'funcionamento_ru': [
+                        {
+                            'abertura': '10:30',
+                            'fechamento': '13:30'
+                        },
+                        {
+                            'abertura': '17:45',
+                            'fechamento': '19:15'
+                        }
+                     ],
+                     'funcionamento_caixa': [
+                        {
+                            'abertura': '10:15',
+                            'fechamento': '13:15'
+                        },
+                        {
+                            'abertura': '17:30',
+                            'fechamento': '19:00'
+                        }
+                     ]})
+
+        return info
         
