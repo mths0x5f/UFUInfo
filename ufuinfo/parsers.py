@@ -65,9 +65,9 @@ class ParsersRU(object):
 
         for ref, tab in zip(nomes_refeicoes, tabelas_cardapios):
             
-            refeicao = normaliza_chave(ref.text)\
-                    .replace('-'+self.campus, '')\
-                    .replace('-(link-mobile)', '')
+            refeicao = (normaliza_chave(ref.text)
+                        .replace('-'+self.campus, '')
+                        .replace('-(link-mobile)', ''))
 
             # Percorre todos os dias disponíveis
 
