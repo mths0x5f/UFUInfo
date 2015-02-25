@@ -47,7 +47,7 @@ class ParsersRU(object):
             campus (str): Nome do campus normalizado. (default santa-monica)
         """
         self.campus = verifica_campus(campus)
-        self.url = 'http://localhost/'
+        self.url = 'http://www.ru.ufu.br/'
 
     def parse_cardapios(self):
 
@@ -64,8 +64,10 @@ class ParsersRU(object):
         tabelas_cardapios = section.find_all('table')
 
         for ref, tab in zip(nomes_refeicoes, tabelas_cardapios):
-
-            refeicao = normaliza_chave(ref.string).replace('-'+self.campus, '')
+            
+            refeicao = normaliza_chave(ref.text)\
+                    .replace('-'+self.campus, '')\
+                    .replace('-(link-mobile)', '')
 
             # Percorre todos os dias disponíveis
 
@@ -151,7 +153,7 @@ class ParsersRU(object):
             r['data'] = strftime("%Y-%m-%d", strptime(r['data'], "%d/%m/%y"))
 
 
-        return dict({'cardapios': list_cardapios})
+        return dict({'cardapios-por-dia': list_cardapios})
 
     def parse_comunicados(self):
         pass
@@ -164,8 +166,8 @@ class ParsersRU(object):
         # já que seus valores dificilmente mudarão em um futuro próximo. Fora
         # implementado assim para evitar a gastura. Feel free to contribute.
 
-        info = dict({'valor_reais': 3.00,
-                     'funcionamento_ru': [
+        info = dict({'valor-reais': 3.00,
+                     'funcionamento-ru': [
                         {
                             'abertura': '10:30',
                             'fechamento': '13:30'
@@ -175,7 +177,7 @@ class ParsersRU(object):
                             'fechamento': '19:15'
                         }
                      ],
-                     'funcionamento_caixa': [
+                     'funcionamento-caixa': [
                         {
                             'abertura': '10:15',
                             'fechamento': '13:15'
@@ -187,4 +189,3 @@ class ParsersRU(object):
                      ]})
 
         return info
-        
