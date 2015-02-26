@@ -36,6 +36,6 @@ Ela é constituída por esses arquivos:
     - actions.py - Módulo de ações e requisições aos sistemas da UFU.
 
 Todas as classes, métodos e funções estão documentadas em seu próprio código
-para a melhor compreensão sobre o uso desta biblioteca. Documentação adicional
-pode ser obtida na página do projeto no GitHub: github.com/mths0x5f/UFUInfo
+para a melhor compreensão sobre o uso desta biblioteca. Auxílio adicional
+pode ser obtido na página do projeto no GitHub: github.com/mths0x5f/UFUInfo
 """
