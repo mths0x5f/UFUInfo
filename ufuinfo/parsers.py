@@ -152,12 +152,36 @@ class ParsersRU(object):
             del r['refs_dict']
             r['data'] = strftime("%Y-%m-%d", strptime(r['data'], "%d/%m/%y"))
 
-
         return dict({'cardapios-por-dia': list_cardapios})
 
     @staticmethod
     def parse_comunicados():
-        pass
+
+        u"""Interpreta as tabelas de cardápio no site do restaurante"""
+
+        pagina = urllib2.urlopen('http://www.ru.ufu.br/comunicados').read()
+        soup = BeautifulSoup(pagina)
+        list_comunicados = []
+
+        # Percorre as refeições e suas respectivas tabelas de cardápio
+
+        section = soup.find('section', id='post-content')
+        tabela = section.find('table')
+        comunicados = tabela.find_all('tr', class_=True)
+
+        for com in comunicados:
+
+            dict_temp = {}
+            dict_temp['assunto'] = com.td.text
+            dict_temp['link'] = 'http://www.ru.ufu.br'+com.td.a['href']
+            dict_temp['conteudo'] = ()
+
+            dado = com.find('td', class_="views-field-field-comunicado-data")
+            dict_temp['data'] = dado.span['content'][:10]
+
+            list_comunicados.append(dict_temp)
+
+        return dict({'comunicados': list_comunicados})
 
     def parse_informacoes(self):
 
