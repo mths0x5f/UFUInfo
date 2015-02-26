@@ -155,7 +155,8 @@ class ParsersRU(object):
 
         return dict({'cardapios-por-dia': list_cardapios})
 
-    def parse_comunicados(self):
+    @staticmethod
+    def parse_comunicados():
         pass
 
     def parse_informacoes(self):
