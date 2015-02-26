@@ -169,17 +169,25 @@ class ParsersRU(object):
         tabela = section.find('table')
         comunicados = tabela.find_all('tr', class_=True)
 
-        for com in comunicados:
+        for com, i in zip(comunicados, xrange(100)):
 
             dict_temp = {}
-            dict_temp['assunto'] = com.td.text
+            dict_temp['assunto'] = trata_espaco_extra(com.td.text)
             dict_temp['link'] = 'http://www.ru.ufu.br'+com.td.a['href']
-            dict_temp['conteudo'] = ()
 
+            pagina = urllib2.urlopen(dict_temp['link']).read()
+            cont = BeautifulSoup(pagina).find('div', class_='field-name-body')
+            dict_temp['conteudo'] = cont.text.replace('Att.,', '').replace('\t','').replace('\n', '')
+
+            # Esse método para a obtenção da data é muito mais confiável e 
+            # eficiente. Substituir algum dia o antigo por este.
             dado = com.find('td', class_="views-field-field-comunicado-data")
             dict_temp['data'] = dado.span['content'][:10]
 
             list_comunicados.append(dict_temp)
+
+            if i == 2:  # Limita a resposta aos 3 últimos comunicados
+                break
 
         return dict({'comunicados': list_comunicados})
 
