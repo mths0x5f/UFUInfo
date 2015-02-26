@@ -17,7 +17,7 @@ Os itens marcados já estão em um estágio considerado útil
 - **Parsers** - Processar e organizar dados
   - Restaurante Universitário
     - [x] Cardápio
-    - [ ] Comunicados
+    - [x] Comunicados
     - [x] Informações
   - Biblioteca
     - [ ] Consulta ao catálogo

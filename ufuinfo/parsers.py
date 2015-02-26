@@ -157,13 +157,11 @@ class ParsersRU(object):
     @staticmethod
     def parse_comunicados():
 
-        u"""Interpreta as tabelas de cardápio no site do restaurante"""
+        u"""Interpreta os comunicados no site do restaurante"""
 
         pagina = urllib2.urlopen('http://www.ru.ufu.br/comunicados').read()
         soup = BeautifulSoup(pagina)
         list_comunicados = []
-
-        # Percorre as refeições e suas respectivas tabelas de cardápio
 
         section = soup.find('section', id='post-content')
         tabela = section.find('table')
@@ -177,7 +175,7 @@ class ParsersRU(object):
 
             pagina = urllib2.urlopen(dict_temp['link']).read()
             cont = BeautifulSoup(pagina).find('div', class_='field-name-body')
-            dict_temp['conteudo'] = cont.text.replace('Att.,', '').replace('\t','').replace('\n', '')
+            dict_temp['conteudo'] = cont.text.replace('Att.,','').replace('\t','').replace('\n\n','')
 
             # Esse método para a obtenção da data é muito mais confiável e 
             # eficiente. Substituir algum dia o antigo por este.
